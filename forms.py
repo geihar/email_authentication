@@ -6,11 +6,11 @@ from models import  User
 
 
 class RegistrationForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    submit = SubmitField('Отправмить ссылку')
+    email = StringField(render_kw={"placeholder": "Email"}, validators=[DataRequired(), Email()])
+    submit = SubmitField()
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
-            raise ValidationError('Вы уже зарегестрированы.')
+            raise ValidationError('You are already registered.')
 

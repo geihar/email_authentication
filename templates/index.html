@@ -1,22 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% if not form %}
-    <h1>it worked</h1>
+    {% if not form  and not data%}
+    <h1 class="msg"> Сслылка для входа была отправлена на ваш email</h1>
+    {% endif %}
+    {%  if data %}
+        <h1 class="msg">Вы прошли аутентификацию через email</h1>
+        <a href="{{ url_for('analytics') }}">Ссылка для просмотра аналитики</a>
     {% endif %}
     {% if form %}
-    <h1>Register</h1>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(size=64) }}<br>
+    <div id="wrapper">
+        <h1>Отправить ссылку для входа</h1>
+        <form id="signin" method="post" action="">
+            {{ form.hidden_tag() }}
+             {{ form.email }}
+            <button type="submit">&#xf0da;</button>
             {% for error in form.email.errors %}
-            <span style="color: red;">{{ error }}</span>
+                <span style="color: red;">{{ error }}</span>
             {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+        </form>
+    </div>
+
     {% endif %}
 {% endblock %}
 

@@ -1,0 +1,5 @@
+Вы получили это письмо, для аутентификации через email
+    Для входа на сайт кликните по ссылке
+{{ url_for('authentication', token=token, _external=True) }}
+
+

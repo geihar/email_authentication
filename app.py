@@ -8,6 +8,7 @@ app.config.from_object(Config)
 
 from models import User, db
 from forms import RegistrationForm
+from mail import send_magic_link
 
 
 
@@ -19,9 +20,10 @@ def index():
         user.set_token()
         db.session.add(user)
         db.session.commit()
+        send_magic_link(form.email.data)
         return render_template('index.html', title='Home')
     if 'token' in session:
-        data = session['token']
+        data = True
         return render_template('index.html', title='Home', data=data)
     return render_template('index.html', title='Home', form=form)
 
@@ -40,7 +42,10 @@ def authentication(token):
 
 @app.route('/analytics')
 def analytics():
-    return 'Hello World!'
+    users = User.query.all()
+    if 'token' in session:
+        return render_template('analytics.html', title='Analytics', users=users)
+    return redirect(url_for('index'))
 
 
 

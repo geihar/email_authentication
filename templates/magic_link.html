@@ -1,0 +1,7 @@
+<p>Вы получили это письмо, для аутентификации через email</p>
+<p>
+    Для входа на сайт
+    <a href="{{ url_for('authentication', token=token, _external=True) }}">
+        кликните по ссылке
+    </a>.
+</p>

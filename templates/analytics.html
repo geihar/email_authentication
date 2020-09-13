@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="mobile-table">
+<table class="analytics">
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Visits</th>
+    </tr>
+    </thead>
+    <tbody>
+        {%  for user in users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.visits }}</td>
+            </tr>
+            {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
+
+
