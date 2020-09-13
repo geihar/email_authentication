@@ -1,29 +1,40 @@
-import uuid
-
-from flask import Flask, session, escape, url_for, request, redirect
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask import Flask, session, escape, url_for, request, redirect, render_template
 
 from config import Config
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+
+from models import User, db
+from forms import RegistrationForm
 
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    if 'username' in session:
-        return 'Logged in as %s' % escape(session['username'])
-    return 'You are not logged in'
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data)
+        user.set_token()
+        db.session.add(user)
+        db.session.commit()
+        return render_template('index.html', title='Home')
+    if 'token' in session:
+        data = session['token']
+        return render_template('index.html', title='Home', data=data)
+    return render_template('index.html', title='Home', form=form)
 
 
-@app.route('/<username>')
-def authentication(username):
-    session['username'] = username
+@app.route('/<token>')
+def authentication(token):
+    user = User.query.filter_by(token=token).first()
+    if user:
+        user.add_visits()
+        db.session.add(user)
+        db.session.commit()
+        session['token'] = token
+
     return redirect(url_for('index'))
 
 
@@ -32,19 +43,6 @@ def analytics():
     return 'Hello World!'
 
 
-class User(db.Model):
-
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), index=True, unique=True)
-
-    def __init__(self, id, email):
-        self.id = id
-        self.email = email
-        self.token = str(uuid.uuid4())
-
-
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
