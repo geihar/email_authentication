@@ -18,8 +18,10 @@ def send_magic_link(email):
 
     user = User.query.filter_by(email=email).first()
 
-    send_email('Аутентификация через email',
-               sender=app.config['ADMINS'][0],
-               recipients=[user.email],
-               text_body=render_template('magic_link.txt', token=user.token),
-               html_body=render_template('magic_link.html', token=user.token))
+    send_email(
+        "Аутентификация через email",
+        sender=app.config["ADMINS"][0],
+        recipients=[user.email],
+        text_body=render_template("magic_link.txt", token=user.token),
+        html_body=render_template("magic_link.html", token=user.token),
+    )
