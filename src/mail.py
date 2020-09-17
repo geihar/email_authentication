@@ -2,7 +2,7 @@ from flask import render_template
 from flask_mail import Mail, Message
 
 from app import app
-from models import User
+from src.models import User
 
 mail = Mail(app)
 

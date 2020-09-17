@@ -2,13 +2,12 @@ from flask import Flask, session, url_for, redirect, render_template
 
 from config import Config
 
-
 app = Flask(__name__)
 app.config.from_object(Config)
 
-from models import User, db
-from forms import RegistrationForm
-from mail import send_magic_link
+from src.models import User, db
+from src.forms import RegistrationForm
+from src.mail import send_magic_link
 
 
 @app.route("/", methods=["GET", "POST"])

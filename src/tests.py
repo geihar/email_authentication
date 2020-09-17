@@ -5,7 +5,8 @@ from unittest import mock
 from flask import session
 
 from app import app
-from models import User, db
+from src.models import db
+from src.facrories import UserFactory
 
 
 class ViewTests(unittest.TestCase):
@@ -70,7 +71,7 @@ class ViewTests(unittest.TestCase):
             self.assertEqual("token" in session, True)
 
     def test_get_index_page_magic_link(self):
-        user = User(email="test@gmail1.com")
+        user = UserFactory()
         user.set_token()
         db.session.add(user)
         db.session.commit()
@@ -85,10 +86,10 @@ class ViewTests(unittest.TestCase):
             self.assertEqual("token" in session, True)
 
     def test_user_create(self):
-        with mock.patch("mail.send_email") as mocked_send_email:
+        with mock.patch("src.mail.send_email") as mocked_send_email:
             with self.client as client:
                 response = client.post(
-                    f"/",
+                    "/",
                     data=json.dumps({"email": "test@gmail.com"}),
                     content_type="application/json",
                     follow_redirects=True,
